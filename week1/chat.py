@@ -1,7 +1,7 @@
 #
 # TODO 1: 导入需要的模块（os 和 openai）
 import os
-from openai import OpenAI, api_key
+from openai import OpenAI
 import sys
 from dotenv import load_dotenv
 
@@ -23,17 +23,16 @@ messages = [
 ]
 # TODO 5: 调用接口拿到回复，打印出回答内容
 response = client.chat.completions.create(
-    model="deepseek-flash",
+    model="deepseek-chat",
     messages=messages,
     temperature=1.5,
     stream=False,
-    reasoning_effort="high",
-    extra_body={"thingking":{"type":"enable"}}
 )
 print("AI回复：")
 print(response.choices[0].message.content)
+print("finish_reason:", response.choices[0].finish_reason)
 # TODO 6: 打印本次用了多少 token（在返回对象里找 usage 字段）
 print("\n==== Token消耗 ====")
 print(f"输入token(prompt_tokens):{response.usage.prompt_tokens}")
-print(f"输出token(completed_tokens):{response.usage.completion_tokens}")
+print(f"输出token(completion_tokens):{response.usage.completion_tokens}")
 print(f"总token(total_tokens):{response.usage.total_tokens}")

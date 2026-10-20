@@ -15,5 +15,22 @@ temperature=1.5 运行3次：
 ## 实验2
 实验结果：输出是空白的
 说明如果消耗token大于最大值，模型不输出
+问题：把 max_tokens 设得很小，观察返回结果。
+
+现象：content 是空字符串，finish_reason 打印出来是 length。
+
+原因（实测确认）：max_tokens 限制的是"输出 token 总数"，而 deepseek-flash
+是思考型模型——它先产出 reasoning_content（推理过程），这段同样计入
+completion_tokens。max_tokens=20 时，20 个 token 全被思考过程消耗掉，
+正文还没开始就被截断，所以 content 是空的。
+
+关键字段：finish_reason
+- stop       正常结束
+- length     被 max_tokens 截断
+- tool_calls 模型要求调用工具（下周会用到）
+
+对照组：用 deepseek-chat（非思考模式）跑同样的 max_tokens=20，
+能直接看到被截断的半句话 + finish_reason=length，
+对比之下就能讲清"思考 token 也占预算"这件事。
 ## 实验3
 模型会根据我的设定特点，而回答问题
