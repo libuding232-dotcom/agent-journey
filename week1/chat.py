@@ -13,7 +13,7 @@ if not api_key:
     sys.exit(1)
 # TODO 3: 创建客户端实例 —— 提示：base_url 是 https://api.deepseek.com，model 用 deepseek-chat
 client = OpenAI(
-    api_key=os.environ.get("DEEPSEEK_API_KEY"),
+    api_key=api_key,
     base_url="https://api.deepseek.com",
 )
 # TODO 4: 构造 messages 列表，包含一个 system 和一个 user 消息
