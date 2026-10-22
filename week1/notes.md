@@ -38,3 +38,8 @@ completion_tokens。max_tokens=20 时，20 个 token 全被思考过程消耗掉
 ##主菜 A：流式输出
 流式输出的实现：告诉服务器需要流式输出“stream=True”,后接口返回一个可迭代的对象reseponse,然后每一轮取一个chunk,取'chunk.choices[0].delta.content
 拼接;首字延迟（TTFT）是流式最核心的体验指标；token 统计要靠 `stream_options.include_usage`。
+
+##主菜 B：asyncio 并发（60–90 分钟）
+1. **为什么并发快？** 等网络 IO 时 CPU 是闲的，`await` 让出控制权去发下一个请求，等待时间重叠。
+2. **GIL 为什么不挡？** GIL 只在 CPU 密集时才是瓶颈；网络请求在等 IO 时释放 GIL，所以 IO 密集用协程有效。
+3. **用同步 `OpenAI` 塞进 `async def` 会怎样？** 阻塞整个事件循环，并发退化成串行——这就是必须用 `AsyncOpenAI` 的原因。
