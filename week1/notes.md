@@ -34,3 +34,7 @@ completion_tokens。max_tokens=20 时，20 个 token 全被思考过程消耗掉
 对比之下就能讲清"思考 token 也占预算"这件事。
 ## 实验3
 模型会根据我的设定特点，而回答问题
+
+##主菜 A：流式输出
+流式输出的实现：告诉服务器需要流式输出“stream=True”,后接口返回一个可迭代的对象reseponse,然后每一轮取一个chunk,取'chunk.choices[0].delta.content
+拼接;首字延迟（TTFT）是流式最核心的体验指标；token 统计要靠 `stream_options.include_usage`。
